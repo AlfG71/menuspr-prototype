@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MenusPR - Sabor Boricua Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #d93025 0%, #ffa726 100%);
+            color: white;
+        }
+
+        .welcome-screen h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .welcome-screen p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .demo-btn {
+            padding: 20px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .demo-btn.customer {
+            background: #10b981;
+            color: white;
+        }
+
+        .demo-btn.owner {
+            background: #f59e0b;
+            color: white;
+        }
+
+        /* Mobile Container */
+        .mobile-container {
+            max-width: 414px;
+            margin: 20px auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+
+        /* Desktop Container */
+        .desktop-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #d93025 0%, #e64a19 100%);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .mobile-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 10px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            border-radius: 6px;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .truck-logo {
+            font-size: 48px;
+            margin-bottom: 5px;
+        }
+
+        .truck-name {
+            font-size: 26px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .truck-tagline {
+            font-size: 14px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .language-toggle {
+            display: flex;
+            gap: 5px;
+            background: rgba(255,255,255,0.2);
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .lang-btn {
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.8);
+            transition: all 0.2s;
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #d93025;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Search Bar */
+        .search-bar {
+            margin: 15px 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #d93025;
+        }
+
+        /* Category Cards */
+        .category-list {
+            padding: 20px;
+        }
+
+        .category-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .category-card:hover {
+            border-color: #d93025;
+            box-shadow: 0 4px 12px rgba(217, 48, 37, 0.15);
+        }
+
+        .category-icon {
+            font-size: 36px;
+        }
+
+        .category-info {
+            flex: 1;
+        }
+
+        .category-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .category-count {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .category-arrow {
+            font-size: 20px;
+            color: #9ca3af;
+        }
+
+        /* Item Cards */
+        .item-list {
+            padding: 20px;
+        }
+
+        .category-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1f2937;
+        }
+
+        .item-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 0;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-card.sold-out {
+            opacity: 0.6;
+        }
+
+        .sold-out-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #ef4444;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .item-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .item-content {
+            padding: 16px;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .item-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .item-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .item-description {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        /* Owner Dashboard */
+        .dashboard-nav {
+            background: #1f2937;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffa726;
+        }
+
+        .dashboard-truck-name {
+            font-size: 18px;
+            color: #9ca3af;
+        }
+
+        .dashboard-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            background: #374151;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #4b5563;
+        }
+
+        .dashboard-content {
+            padding: 40px;
+        }
+
+        .stats-bar {
+            background: #fef3c7;
+            border: 2px solid #fbbf24;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-icon {
+            font-size: 24px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #92400e;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 12px 24px;
+            border: 2px solid #d93025;
+            background: white;
+            color: #d93025;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #d93025;
+            color: white;
+        }
+
+        .action-btn.primary {
+            background: #d93025;
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: #b71c1c;
+        }
+
+        /* Category Section */
+        .category-section {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .category-section-header {
+            padding: 20px;
+            background: #f9fafb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .category-section-title {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-section-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .items-table {
+            width: 100%;
+        }
+
+        .items-table tr {
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .items-table td {
+            padding: 16px 20px;
+            vertical-align: middle;
+        }
+
+        .item-thumb {
+            width: 80px;
+            height: 60px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .table-item-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .table-item-price {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .availability-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-switch {
+            width: 48px;
+            height: 24px;
+            background: #d1d5db;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .toggle-switch.active {
+            background: #10b981;
+        }
+
+        .toggle-slider {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: left 0.2s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            left: 26px;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #6b7280;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #d93025;
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .photo-upload {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .photo-upload:hover {
+            border-color: #d93025;
+            background: #f9fafb;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .btn-primary {
+            background: #d93025;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #b71c1c;
+        }
+
+        /* QR Modal */
+        .qr-container {
+            text-align: center;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            background: #1f2937;
+            margin: 20px auto;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+        }
+
+        .menu-link {
+            background: #f3f4f6;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .link-text {
+            font-family: monospace;
+            color: #d93025;
+        }
+
+        .copy-btn {
+            padding: 8px 16px;
+            background: #d93025;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .share-btn {
+            padding: 12px 20px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .share-btn:hover {
+            border-color: #d93025;
+            background: #f9fafb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .desktop-container {
+                padding: 0;
+            }
+
+            .dashboard-content {
+                padding: 20px;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="welcome-screen">
+        <h1>🇵🇷 MenusPR</h1>
+        <p>Tu menu siempre al dia</p>
+        <div class="demo-buttons">
+            <button class="demo-btn customer" onclick="showCustomerView()">
+                👤 Experiencia del Cliente<br>
+                <small style="opacity: 0.8;">Vista de Menú Móvil</small>
+            </button>
+            <button class="demo-btn owner" onclick="showOwnerDashboard()">
+                👨‍💼 Panel del Dueño<br>
+                <small style="opacity: 0.8;">Gestión del Restaurante</small>
+            </button>
+        </div>
+    </div>
+
+    <!-- Customer Mobile View -->
+    <div id="customerView" class="mobile-container hidden">
+        <!-- Menu Landing -->
+        <div id="menuLanding">
+            <div class="mobile-header">
+                <div class="logo-section">
+                    <div class="truck-logo">🇵🇷</div>
+                    <div class="truck-name">Sabor Boricua</div>
+                    <div class="truck-tagline">Comida Auténtica Puertorriqueña</div>
+                </div>
+                <div class="mobile-header-content">
+                    <button class="back-btn" onclick="showWelcome()">←</button>
+                    <div class="language-toggle">
+                        <button class="lang-btn active" onclick="switchLanguage('es')">ES</button>
+                        <button class="lang-btn" onclick="switchLanguage('en')">EN</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Buscar en el menú..." id="searchInput">
+            </div>
+
+            <div class="category-list" id="categoryList">
+                <div class="category-card" onclick="showCategory('platos')">
+                    <div class="category-icon">🍗</div>
+                    <div class="category-info">
+                        <div class="category-name">PLATOS PRINCIPALES</div>
+                        <div class="category-count">6 artículos</div>
+                    </div>
+                    <div class="category-arrow">→</div>
+                </div>
+
+                <div class="category-card" onclick="showCategory('frituras')">
+                    <div class="category-icon">🥟</div>
+                    <div class="category-info">
+                        <div class="category-name">FRITURAS</div>
+                        <div class="category-count">5 artículos</div>
+                    </div>
+                    <div class="category-arrow">→</div>
+                </div>
+
+                <div class="category-card" onclick="showCategory('bebidas')">
+                    <div class="category-icon">🥤</div>
+                    <div class="category-info">
+                        <div class="category-name">BEBIDAS</div>
+                        <div class="category-count">6 artículos</div>
+                    </div>
+                    <div class="category-arrow">→</div>
+                </div>
+
+                <div class="category-card" onclick="showCategory('postres')">
+                    <div class="category-icon">🍰</div>
+                    <div class="category-info">
+                        <div class="category-name">POSTRES</div>
+                        <div class="category-count">3 artículos</div>
+                    </div>
+                    <div class="category-arrow">→</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category View -->
+        <div id="categoryView" class="hidden">
+            <div class="mobile-header">
+                <div class="mobile-header-content">
+                    <button class="back-btn" onclick="backToMenu()">← Menú</button>
+                    <div class="language-toggle">
+                        <button class="lang-btn active">ES</button>
+                        <button class="lang-btn">EN</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-list">
+                <div class="category-title">
+                    <span id="categoryEmoji">🍗</span>
+                    <span id="categoryName">PLATOS PRINCIPALES</span>
+                </div>
+
+                <div id="itemsList">
+                    <!-- Items will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Owner Dashboard -->
+    <div id="ownerDashboard" class="desktop-container hidden">
+        <div class="dashboard-nav">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div class="dashboard-logo">MenusPR</div>
+                <div class="dashboard-truck-name">Sabor Boricua</div>
+            </div>
+            <div class="dashboard-actions">
+                <button class="nav-btn" onclick="showWelcome()">← Volver al Demo</button>
+                <button class="nav-btn">⚙️ Configuración</button>
+                <button class="nav-btn">👤 Cuenta</button>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-icon">📊</div>
+                    <div>
+                        <div class="stat-label">Vistas de Hoy</div>
+                        <div class="stat-value">89</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">🔥</div>
+                    <div>
+                        <div class="stat-label">Más Popular</div>
+                        <div class="stat-value" style="font-size: 18px;">Mofongo de Cerdo</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">✓</div>
+                    <div>
+                        <div class="stat-label">Disponible</div>
+                        <div class="stat-value">18/20</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn primary" onclick="openAddCategory()">+ Añadir Categoría</button>
+                <button class="action-btn" onclick="openQRModal()">📱 Descargar Código QR</button>
+                <button class="action-btn" onclick="showCustomerView()">🔗 Ver Menú</button>
+            </div>
+
+            <!-- Platos Category -->
+            <div class="category-section">
+                <div class="category-section-header">
+                    <div class="category-section-title">
+                        <span>🍗</span>
+                        <span>PLATOS PRINCIPALES</span>
+                        <span style="color: #6b7280; font-weight: 400; font-size: 16px;">(6 artículos)</span>
+                    </div>
+                    <div class="category-section-actions">
+                        <button class="icon-btn">✏️</button>
+                        <button class="icon-btn">🗑️</button>
+                    </div>
+                </div>
+                <table class="items-table">
+                    <tr>
+                        <td style="width: 80px;">
+                            <!-- TESTING PHOTO FEATURE <img src="https://images.unsplash.com/photos/grilled-meat-and-vegetable-on-the-table-UC0HZdUitWY?w=300&h=200&fit=crop" alt="Mofongo" class="item-thumb"> -->
+                             <img src="https://media.istockphoto.com/id/1362951664/photo/meat-mofongo.jpg?s=1024x1024&w=is&k=20&c=ZEXDa_Da6C1RjNTsd6wXwGcseDOPuRNVz9ymXvNaDTo=" alt="Mofongo" class="item-thumb">
+                            <!-- <img src="https://images.unsplash.com/photo-1626200419199-391ae4be7a41?w=300&h=200&fit=crop" alt="Mofongo" class="item-thumb"> -->
+                        </td>
+                        <td>
+                            <div class="item-info">
+                                <div class="table-item-name">Mofongo de Cerdo</div>
+                                <div class="table-item-price">$12.00</div>
+                            </div>
+                        </td>
+                        <td style="width: 100px;">
+                            <div class="availability-toggle">
+                                <div class="toggle-switch active" onclick="toggleAvailability(this)">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="width: 120px;">
+                            <div class="item-actions">
+                                <button class="icon-btn" onclick="openEditModal()">✏️</button>
+                                <button class="icon-btn">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><img src="https://images.unsplash.com/photo-1701104080089-11b8f60f7fd6?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHVlcnRvJTIwcmljYW4lMjBmb29kfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=500" alt="Mofongo Camarones" class="item-thumb"></td>
+                        <td>
+                            <div class="item-info">
+                                <div class="table-item-name">Mofongo de Camarones</div>
+                                <div class="table-item-price">$15.00</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="availability-toggle">
+                                <div class="toggle-switch active" onclick="toggleAvailability(this)">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="item-actions">
+                                <button class="icon-btn" onclick="openEditModal()">✏️</button>
+                                <button class="icon-btn">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><img src="https://images.unsplash.com/photo-1523986490752-c28064f26be3?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHVsbGVkJTIwcG9ya3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=500" alt="Pernil" class="item-thumb"></td>
+                        <td>
+                            <div class="item-info">
+                                <div class="table-item-name">Pernil</div>
+                                <div class="table-item-price">$10.00</div>
+                                <div style="color: #ef4444; font-size: 12px; font-weight: 600;">AGOTADO</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="availability-toggle">
+                                <div class="toggle-switch" onclick="toggleAvailability(this)">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="item-actions">
+                                <button class="icon-btn" onclick="openEditModal()">✏️</button>
+                                <button class="icon-btn">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div style="padding: 15px 20px; border-top: 1px solid #e5e7eb;">
+                    <button class="action-btn" onclick="openAddItemModal()">+ Añadir Artículo</button>
+                </div>
+            </div>
+
+            <!-- Frituras Category -->
+            <div class="category-section">
+                <div class="category-section-header">
+                    <div class="category-section-title">
+                        <span>🥟</span>
+                        <span>FRITURAS</span>
+                        <span style="color: #6b7280; font-weight: 400; font-size: 16px;">(5 artículos)</span>
+                    </div>
+                    <div class="category-section-actions">
+                        <button class="icon-btn">✏️</button>
+                        <button class="icon-btn">🗑️</button>
+                    </div>
+                </div>
+                <div style="padding: 20px; text-align: center; color: #6b7280;">
+                    Click para expandir y ver artículos
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Item Modal -->
+    <div id="itemModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Añadir Nuevo Artículo</div>
+                <button class="modal-close" onclick="closeModal('itemModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Nombre del Artículo (Español) *</label>
+                    <input type="text" class="form-input" placeholder="ej., Mofongo de Cerdo">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nombre del Artículo (Inglés) *</label>
+                    <input type="text" class="form-input" placeholder="e.g., Pork Mofongo">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Descripción (Español)</label>
+                    <textarea class="form-input form-textarea" placeholder="ej., Plátanos majados con chicharrón y caldo de cerdo"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Descripción (Inglés)</label>
+                    <textarea class="form-input form-textarea" placeholder="e.g., Mashed plantains with pork cracklings"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Precio *</label>
+                    <input type="number" class="form-input" placeholder="12.00" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Foto (Opcional)</label>
+                    <div class="photo-upload">
+                        <div class="upload-icon">📷</div>
+                        <div>Haz clic para subir o arrastra y suelta</div>
+                        <div style="color: #9ca3af; font-size: 14px; margin-top: 5px;">PNG, JPG hasta 5MB</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox">
+                        <span>Marcar como agotado</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('itemModal')">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveItem()">Guardar Artículo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div id="qrModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Tu Código QR y Compartir</div>
+                <button class="modal-close" onclick="closeModal('qrModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="qr-container">
+                    <div class="qr-code">
+                        <span style="color: white;">QR</span>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <div class="form-label">Tu Enlace del Menú:</div>
+                        <div class="menu-link">
+                            <span class="link-text">menuspr.com/sabor-boricua</span>
+                            <button class="copy-btn" onclick="copyLink()">📋 Copiar</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">⬇️ Descargar Código QR (PNG)</button>
+                    <button class="btn btn-secondary" style="width: 100%; margin-bottom: 20px;">📄 Descargar Carpa de Mesa (PDF)</button>
+
+                    <div style="border-top: 2px solid #e5e7eb; padding-top: 20px;">
+                        <div class="form-label">Compartir en Redes Sociales:</div>
+                        <div class="share-buttons">
+                            <button class="share-btn">📱 WhatsApp</button>
+                            <button class="share-btn">📘 Facebook</button>
+                            <button class="share-btn">📸 Instagram</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Menu Data with Real Images
+        const menuData = {
+            platos: {
+                emoji: '🍗',
+                name: 'PLATOS PRINCIPALES',
+                nameEN: 'MAIN DISHES',
+                items: [
+                    {
+                        image: 'https://media.istockphoto.com/id/1362951664/photo/meat-mofongo.jpg?s=1024x1024&w=is&k=20&c=ZEXDa_Da6C1RjNTsd6wXwGcseDOPuRNVz9ymXvNaDTo=',
+                        nameES: 'Mofongo de Cerdo',
+                        nameEN: 'Pork Mofongo',
+                        descES: 'Plátanos majados con chicharrón, servido con caldo de cerdo',
+                        descEN: 'Mashed plantains with pork cracklings, served with pork broth',
+                        price: '$12.00',
+                        available: true
+                    },
+                    {
+                        image: 'https://images.unsplash.com/photo-1701104080089-11b8f60f7fd6?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHVlcnRvJTIwcmljYW4lMjBmb29kfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=500',
+                        nameES: 'Mofongo de Camarones',
+                        nameEN: 'Shrimp Mofongo',
+                        descES: 'Plátanos majados con camarones al ajillo en salsa criolla',
+                        descEN: 'Mashed plantains with garlic shrimp in creole sauce',
+                        price: '$15.00',
+                        available: true
+                    },
+                    {
+                        image: 'https://images.unsplash.com/photo-1523986490752-c28064f26be3?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHVsbGVkJTIwcG9ya3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=500',
+                        nameES: 'Pernil',
+                        nameEN: 'Roasted Pork Shoulder',
+                        descES: 'Pernil de cerdo asado con arroz, habichuelas y tostones',
+                        descEN: 'Slow-roasted pork shoulder with rice, beans and tostones',
+                        price: '$10.00',
+                        available: false
+                    },
+                    {
+                        image: 'https://images.unsplash.com/photo-1612871689527-2a6145cc9e86?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cG9yayUyMGNob3BzfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=500',
+                        nameES: 'Chuleta Can-Can',
+                        nameEN: 'Can-Can Pork Chop',
+                        descES: 'Chuleta de cerdo frita crujiente con arroz y gandules',
+                        descEN: 'Crispy fried pork chop with rice and pigeon peas',
+                        price: '$11.00',
+                        available: true
+                    },
+                    {
+                        image: 'https://images.unsplash.com/photo-1714383611437-485d97141913?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXJyb3olMjBjb24lMjBwb2xsb3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=500',
+                        nameES: 'Arroz con Pollo',
+                        nameEN: 'Chicken with Rice',
+                        descES: 'Pollo guisado con arroz amarillo y vegetales',
+                        descEN: 'Stewed chicken with yellow rice and vegetables',
+                        price: '$9.00',
+                        available: true
+                    },
+                    {
+                        image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3RlYWt8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=500',
+                        nameES: 'Bistec Encebollado',
+                        nameEN: 'Steak with Onions',
+                        descES: 'Bistec de res con cebollas salteadas, arroz y habichuelas',
+                        descEN: 'Beef steak with sautéed onions, rice and beans',
+                        price: '$13.00',
+                        available: true
+                    }
+                ]
+            },
+            frituras: {
+                emoji: '🥟',
+                name: 'FRITURAS',
+                nameEN: 'FRIED FOODS',
+                items: [
+                    {
+                        image: 'https://plus.unsplash.com/premium_photo-1668618295141-68d726813100?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZW1wYW5hZGFzfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=500',
+                        nameES: 'Empanadillas de Carne',
+                        nameEN: 'Beef Turnovers',
+                        descES: 'Empanadillas crujientes rellenas de carne molida sazonada',
+                        descEN: 'Crispy turnovers filled with seasoned ground beef',
+                        price: '$2.50',
+                        available: true
+                    },
+                    {
+                        image: 'https://plus.unsplash.com/premium_photo-1679682071248-2ee7b12a1f54?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGVtcGFuYWRhc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=500',
+                        nameES: 'Empanadillas de Pollo',
+                        nameEN: 'Chicken Turnovers',
+                        descES: 'Empanadillas rellenas de pollo guisado',
+                        descEN: 'Turnovers filled with stewed chicken',
+                        price: '$2.50',
+                        available: true
+                    },
+                    {
+                        image: 'https://media.istockphoto.com/id/173757033/photo/deep-fried-alcapurrias-hanging-to-cool.jpg?s=1024x1024&w=is&k=20&c=dg18BLT9DrOAk3Ic61Hu_MLwnTOEXygv4alhdWhnX0w=',
+                        nameES: 'Alcapurrias',
+                        nameEN: 'Alcapurrias',
+                        descES: 'Fritura de yuca y plátano verde rellena de carne',
+                        descEN: 'Yucca and green plantain fritter filled with beef',
+                        price: '$3.00',
+                        available: true
+                    },
+                    {
+                        image: 'https://media.istockphoto.com/id/1266038735/photo/tostones-puerto-rican-fried-plantains.jpg?s=1024x1024&w=is&k=20&c=SZxovuHcRRNBI_S_GqKtqpNYn9oUuxsRlS5aEt5BxcQ=',
+                        nameES: 'Tostones',
+                        nameEN: 'Fried Plantains',
+                        descES: 'Plátanos verdes fritos y aplastados, servidos con mayo-ketchup',
+                        descEN: 'Twice-fried green plantains, served with mayo-ketchup',
+                        price: '$4.00',
+                        available: true
+                    },
+                    {
+                        image: 'https://media.istockphoto.com/id/173028002/photo/bacalaitos-in-pine-nuts.jpg?s=1024x1024&w=is&k=20&c=EwuVkvR3Kl3WiQ9cze6asDA26VJ6VDQ0nu3TjrGVjIE=',
+                        nameES: 'Bacalaítos',
+                        nameEN: 'Codfish Fritters',
+                        descES: 'Fritura crujiente de bacalao con masa de harina',
+                        descEN: 'Crispy codfish fritters with flour batter',
+                        price: '$2.00',
+                        available: true
+                    }
+                ]
+            },
+            bebidas: {
+                emoji: '🥤',
+                name: 'BEBIDAS',
+                nameEN: 'DRINKS',
+                items: [
+                    {
+                        image: 'https://images.unsplash.com/photo-1503478526294-c1fec15765dc?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHBpbmElMjBjb2xhZGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=500',
+                        nameES: 'Piña Colada',
+                        nameEN: 'Piña Colada',
+                        descES: 'Bebida tropical de piña y coco (sin alcohol)',
+                        descEN: 'Tropical pineapple and coconut drink (non-alcoholic)',
+                        price: '$5.00',
+                        available: true
+                    },
+                    // {
+                    //     image: 'https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=600&h=400&fit=crop',
+                    //     nameES: 'Limber de Coco',
+                    //     nameEN: 'Coconut Ice',
+                    //     descES: 'Postre helado de coco tradicional puertorriqueño',
+                    //     descEN: 'Traditional Puerto Rican frozen coconut dessert',
+                    //     price: '$2.50',
+                    //     available: true
+                    // },
+                    {
+                        image: 'https://images.unsplash.com/photo-1637958427185-25a2c0e58419?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFsdGElMjBpbmRpYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=500',
+                        nameES: 'Malta India',
+                        nameEN: 'Malta',
+                        descES: 'Bebida de malta carbonatada dulce',
+                        descEN: 'Sweet carbonated malt beverage',
+                        price: '$2.00',
+                        available: true
+                    },
+                    {
+                        image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGNhZmV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=500',
+                        nameES: 'Café con Leche',
+                        nameEN: 'Coffee with Milk',
+                        descES: 'Café puertorriqueño fuerte con leche caliente',
+                        descEN: 'Strong Puerto Rican coffee with hot milk',
+                        price: '$3.00',
+                        available: true
+                    },
+                    {
+                        image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8anVnb3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=500',
+                        nameES: 'Jugo Natural',
+                        nameEN: 'Fresh Juice',
+                        descES: 'Jugo fresco del día (china, parcha o tamarindo)',
+                        descEN: 'Fresh juice of the day (orange, passion fruit or tamarind)',
+                        price: '$4.00',
+                        available: true
+                    },
+                    {
+                        image: 'https://images.unsplash.com/photo-1620752420341-4cd7642568dd?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YWd1YSUyMGRlJTIwY29jb3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=500',
+                        nameES: 'Agua de Coco',
+                        nameEN: 'Coconut Water',
+                        descES: 'Agua de coco natural y refrescante',
+                        descEN: 'Natural and refreshing coconut water',
+                        price: '$3.50',
+                        available: true
+                    }
+                ]
+            },
+            postres: {
+                emoji: '🍰',
+                name: 'POSTRES',
+                nameEN: 'DESSERTS',
+                items: [
+                    {
+                        image: 'https://images.unsplash.com/photo-1653988354010-39637252a2db?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmxhbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=500',
+                        nameES: 'Flan de Coco',
+                        nameEN: 'Coconut Flan',
+                        descES: 'Flan cremoso de coco con caramelo',
+                        descEN: 'Creamy coconut flan with caramel',
+                        price: '$4.00',
+                        available: true
+                    },
+                    {
+                        image: 'https://media.istockphoto.com/id/1175536020/photo/corn-acaçá.webp?a=1&b=1&s=612x612&w=0&k=20&c=On6mytJAxeexE6t3E25ojFNmumD4TWE1lDKI87AoRMo=',
+                        nameES: 'Tembleque',
+                        nameEN: 'Tembleque',
+                        descES: 'Postre de coco tradicional con canela',
+                        descEN: 'Traditional coconut pudding with cinnamon',
+                        price: '$3.50',
+                        available: true
+                    },
+                    {
+                        image: 'https://images.unsplash.com/photo-1606728099646-68d5a0a4d423?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHJpY2UlMjBwdWRkaW5nfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=500',
+                        nameES: 'Arroz con Dulce',
+                        nameEN: 'Sweet Rice Pudding',
+                        descES: 'Arroz cremoso con coco, especias y pasas',
+                        descEN: 'Creamy rice with coconut, spices and raisins',
+                        price: '$3.50',
+                        available: true
+                    }
+                ]
+            }
+        };
+
+        let currentLanguage = 'es';
+
+        // Navigation Functions
+        function showWelcome() {
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            document.getElementById('customerView').classList.add('hidden');
+            document.getElementById('ownerDashboard').classList.add('hidden');
+        }
+
+        function showCustomerView() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('customerView').classList.remove('hidden');
+            document.getElementById('ownerDashboard').classList.add('hidden');
+            document.getElementById('menuLanding').classList.remove('hidden');
+            document.getElementById('categoryView').classList.add('hidden');
+        }
+
+        function showOwnerDashboard() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('customerView').classList.add('hidden');
+            document.getElementById('ownerDashboard').classList.remove('hidden');
+        }
+
+        function showCategory(categoryId) {
+            const category = menuData[categoryId];
+            document.getElementById('menuLanding').classList.add('hidden');
+            document.getElementById('categoryView').classList.remove('hidden');
+
+            document.getElementById('categoryEmoji').textContent = category.emoji;
+            document.getElementById('categoryName').textContent = currentLanguage === 'es' ? category.name : category.nameEN;
+
+            const itemsList = document.getElementById('itemsList');
+            itemsList.innerHTML = '';
+
+            category.items.forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'item-card' + (!item.available ? ' sold-out' : '');
+
+                itemCard.innerHTML = `
+                    ${!item.available ? '<div class="sold-out-badge">AGOTADO</div>' : ''}
+                    <img src="${item.image}" alt="${item.nameES}" class="item-image">
+                    <div class="item-content">
+                        <div class="item-header">
+                            <div class="item-name">${currentLanguage === 'es' ? item.nameES : item.nameEN}</div>
+                            <div class="item-price">${item.price}</div>
+                        </div>
+                        <div class="item-description">${currentLanguage === 'es' ? item.descES : item.descEN}</div>
+                    </div>
+                `;
+
+                itemsList.appendChild(itemCard);
+            });
+        }
+
+        function backToMenu() {
+            document.getElementById('categoryView').classList.add('hidden');
+            document.getElementById('menuLanding').classList.remove('hidden');
+        }
+
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            const buttons = document.querySelectorAll('.lang-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update search placeholder
+            const searchInput = document.getElementById('searchInput');
+            if (lang === 'es') {
+                searchInput.placeholder = 'Buscar en el menú...';
+            } else {
+                searchInput.placeholder = 'Search menu...';
+            }
+        }
+
+        // Modal Functions
+        function openAddItemModal() {
+            document.getElementById('itemModal').classList.add('active');
+        }
+
+        function openEditModal() {
+            document.getElementById('itemModal').classList.add('active');
+        }
+
+        function openQRModal() {
+            document.getElementById('qrModal').classList.add('active');
+        }
+
+        function openAddCategory() {
+            alert('Función Añadir Categoría - Abriría un modal para crear una nueva categoría');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function saveItem() {
+            alert('¡Artículo guardado! En la app real, esto guardaría en tu base de datos.');
+            closeModal('itemModal');
+        }
+
+        function copyLink() {
+            alert('Enlace copiado al portapapeles: menuspr.com/sabor-boricua');
+        }
+
+        // Toggle Availability
+        function toggleAvailability(toggle) {
+            toggle.classList.toggle('active');
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            if (searchTerm.length > 0) {
+                console.log('Buscando:', searchTerm);
+            }
+        });
+
+        // Close modals when clicking outside
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
