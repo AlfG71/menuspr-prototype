@@ -893,8 +893,8 @@
             </div>
             <div class="dashboard-actions">
                 <button class="nav-btn" onclick="showWelcome()">← Volver al Demo</button>
-                <button class="nav-btn">⚙️ Configuración</button>
-                <button class="nav-btn">👤 Mi Cuenta</button>
+                <button class="nav-btn" onclick="openAddCategory()">⚙️ Configuración</button>
+                <button class="nav-btn" onclick="openAddCategory()">👤 Mi Cuenta</button>
             </div>
         </div>
 
@@ -1004,8 +1004,8 @@
                         </div>
                         <div class="copy-feedback" id="copyFeedback">¡Copiado al portapapeles!</div>
                     </div>
-                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">⬇️ Descargar Código QR (PNG)</button>
-                    <button class="btn btn-secondary" style="width: 100%; margin-bottom: 20px;">📄 Descargar Carpa de Mesa (PDF)</button>
+                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px;" onclick="openAddCategory()">⬇️ Descargar Código QR (PNG)</button>
+                    <button class="btn btn-secondary" style="width: 100%; margin-bottom: 20px;" onclick="openAddCategory()">📄 Descargar Carpa de Mesa (PDF)</button>
 
                     <div style="border-top: 2px solid #e5e7eb; padding-top: 20px;">
                         <div class="form-label">Compartir en Redes Sociales:</div>
@@ -1582,7 +1582,7 @@
         }
 
         function openAddCategory() {
-            alert('Función Añadir Categoría - En desarrollo. Esta función permitirá crear nuevas categorías personalizadas.');
+            alert('Funcionalidad En desarrollo. Esta función estara activada en la aplicacion.');
         }
 
         function closeModal(modalId) {
