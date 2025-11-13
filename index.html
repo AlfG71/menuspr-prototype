@@ -432,6 +432,16 @@
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s;
+        }
+
+        .category-section-header:hover {
+            background: #f3f4f6;
+        }
+
+        .category-section-header:active {
+            background: #e5e7eb;
         }
 
         .category-section-title {
@@ -440,6 +450,28 @@
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+
+        .category-section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .category-section-content.expanded {
+            max-height: 2000px;
+            transition: max-height 0.5s ease-in;
+        }
+
+        .category-chevron {
+            font-size: 20px;
+            color: #6b7280;
+            transition: transform 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .category-chevron.rotated {
+            transform: rotate(90deg);
         }
 
         .category-section-actions {
@@ -1363,13 +1395,14 @@
                 section.className = 'category-section';
 
                 const headerHTML = `
-                    <div class="category-section-header">
+                    <div class="category-section-header" onclick="toggleCategorySection(this)">
                         <div class="category-section-title">
                             <span>${category.emoji}</span>
                             <span>${category.name}</span>
                             <span style="color: #6b7280; font-weight: 400; font-size: 16px;">(${category.items.length} artículos)</span>
+                            <span class="category-chevron">▶</span>
                         </div>
-                        <div class="category-section-actions">
+                        <div class="category-section-actions" onclick="event.stopPropagation()">
                             <button class="icon-btn">✏️</button>
                             <button class="icon-btn">🗑️</button>
                         </div>
@@ -1377,47 +1410,57 @@
                 `;
 
                 const itemsTableHTML = `
-                    <table class="items-table">
-                        ${category.items.map((item, index) => `
-                            <tr>
-                                <td style="width: 80px;">
-                                    <img src="${item.image}" alt="${item.nameES}" class="item-thumb">
-                                </td>
-                                <td>
-                                    <div class="item-info">
-                                        <div class="table-item-name">${item.nameES}</div>
-                                        <div class="table-item-price">${item.price}</div>
-                                        ${!item.available ? '<div style="color: #ef4444; font-size: 12px; font-weight: 600;">AGOTADO</div>' : ''}
-                                    </div>
-                                </td>
-                                <td style="width: 100px;">
-                                    <div class="availability-toggle">
-                                        <div class="toggle-switch ${item.available ? 'active' : ''}"
-                                             onclick="toggleAvailability('${categoryId}', ${index})">
-                                            <div class="toggle-slider"></div>
+                    <div class="category-section-content">
+                        <table class="items-table">
+                            ${category.items.map((item, index) => `
+                                <tr>
+                                    <td style="width: 80px;">
+                                        <img src="${item.image}" alt="${item.nameES}" class="item-thumb">
+                                    </td>
+                                    <td>
+                                        <div class="item-info">
+                                            <div class="table-item-name">${item.nameES}</div>
+                                            <div class="table-item-price">${item.price}</div>
+                                            ${!item.available ? '<div style="color: #ef4444; font-size: 12px; font-weight: 600;">AGOTADO</div>' : ''}
                                         </div>
-                                    </div>
-                                </td>
-                                <td style="width: 120px;">
-                                    <div class="item-actions">
-                                        <button class="icon-btn" onclick="openEditModal('${categoryId}', ${index})">✏️</button>
-                                        <button class="icon-btn" onclick="deleteItem('${categoryId}', ${index})">🗑️</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </table>
-                `;
-
-                const footerHTML = `
-                    <div style="padding: 15px 20px; border-top: 1px solid #e5e7eb;">
-                        <button class="action-btn" onclick="openAddItemModal('${categoryId}')">+ Añadir Artículo</button>
+                                    </td>
+                                    <td style="width: 100px;">
+                                        <div class="availability-toggle">
+                                            <div class="toggle-switch ${item.available ? 'active' : ''}"
+                                                 onclick="toggleAvailability('${categoryId}', ${index})">
+                                                <div class="toggle-slider"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width: 120px;">
+                                        <div class="item-actions">
+                                            <button class="icon-btn" onclick="openEditModal('${categoryId}', ${index})">✏️</button>
+                                            <button class="icon-btn" onclick="deleteItem('${categoryId}', ${index})">🗑️</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                        <div style="padding: 15px 20px; border-top: 1px solid #e5e7eb;">
+                            <button class="action-btn" onclick="openAddItemModal('${categoryId}')">+ Añadir Artículo</button>
+                        </div>
                     </div>
                 `;
 
-                section.innerHTML = headerHTML + itemsTableHTML + footerHTML;
+                section.innerHTML = headerHTML + itemsTableHTML;
                 container.appendChild(section);
             });
+        }
+
+        // FEATURE 5: COLLAPSIBLE MENU SECTIONS - TOGGLE OPEN/CLOSED
+        function toggleCategorySection(headerElement) {
+            const section = headerElement.parentElement;
+            const content = section.querySelector('.category-section-content');
+            const chevron = section.querySelector('.category-chevron');
+
+            // Toggle the expanded class
+            content.classList.toggle('expanded');
+            chevron.classList.toggle('rotated');
         }
 
         // FEATURE 2: 86 BUTTON - TOGGLE AVAILABILITY WITH REAL-TIME UPDATE
